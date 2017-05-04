@@ -58,6 +58,9 @@ Copyright (c) .NET Foundation. All rights reserved.
 
     <_DotNetHostExecutableName>dotnet$(_NativeExecutableExtension)</_DotNetHostExecutableName>
     <_DotNetAppHostExecutableName>apphost$(_NativeExecutableExtension)</_DotNetAppHostExecutableName>
+    <_DotNetAppHostwExecutableName>apphostw$(_NativeExecutableExtension)</_DotNetAppHostwExecutableName>
+    <_DeployedAppHostName Condition="'$(UseGuiHost)' != 'true' Or !$(RuntimeIdentifier.StartsWith('win'))">$(_DotNetAppHostExecutableName)</_DeployedAppHostName>
+    <_DeployedAppHostName Condition="'$(UseGuiHost)' == 'true' And $(RuntimeIdentifier.StartsWith('win'))">$(_DotNetAppHostwExecutableName)</_DeployedAppHostName>
 
     <_DotNetHostPolicyLibraryName>$(_NativeLibraryPrefix)hostpolicy$(_NativeLibraryExtension)</_DotNetHostPolicyLibraryName>
     <_DotNetHostFxrLibraryName>$(_NativeLibraryPrefix)hostfxr$(_NativeLibraryExtension)</_DotNetHostFxrLibraryName>
@@ -220,7 +223,7 @@ Copyright (c) .NET Foundation. All rights reserved.
                                               '%(_NETCoreNativeItems.FileName)%(_NETCoreNativeItems.Extension)' == '$(_DotNetHostFxrLibraryName)'" />
 
       <NativeRestoredAppHostNETCore Include="%(_NETCoreNativeItems.ResolvedPath)"
-                                   Condition="'%(_NETCoreNativeItems.FileName)%(_NETCoreNativeItems.Extension)' == '$(_DotNetAppHostExecutableName)'"/>
+                                   Condition="'%(_NETCoreNativeItems.FileName)%(_NETCoreNativeItems.Extension)' == '$(_DeployedAppHostName)'"/>
     </ItemGroup>
 
     <PropertyGroup Condition="'@(NativeRestoredAppHostNETCore)' != '' ">
@@ -229,7 +232,7 @@ Copyright (c) .NET Foundation. All rights reserved.
 
     <NETSdkError Condition="'@(NativeRestoredAppHostNETCore->Count())' &gt; 1"
             ResourceName="MultipleFilesResolved"
-            FormatArguments="$(_DotNetAppHostExecutableName)" />
+            FormatArguments="$(_DeployedAppHostName)" />
     
     <EmbedAppNameInHost   AppHostSourcePath="@(NativeRestoredAppHostNETCore)"
                           AppHostDestinationDirectoryPath="$(AppHostDestinationDirectoryPath)"

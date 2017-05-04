@@ -557,7 +557,7 @@ Copyright (c) .NET Foundation. All rights reserved.
 
     <ItemGroup>
 
-      <ResolvedFileToRemove  Include ="%(ResolvedFileToPublish.Identity)" Condition="'%(ResolvedFileToPublish.RelativePath)' == '$(_DotNetHostExecutableName)' Or '%(ResolvedFileToPublish.RelativePath)' == '$(_DotNetAppHostExecutableName)'"/>
+      <ResolvedFileToRemove  Include ="%(ResolvedFileToPublish.Identity)" Condition="'%(ResolvedFileToPublish.RelativePath)' == '$(_DotNetHostExecutableName)' Or '%(ResolvedFileToPublish.RelativePath)' == '$(_DotNetAppHostExecutableName)' Or '%(ResolvedFileToPublish.RelativePath)' == '$(_DotNetAppHostwExecutableName)'"/>
       <ResolvedFileToPublish Remove ="%(ResolvedFileToRemove.Identity)"/>
 
       <ResolvedFileToPublish Include="%(NativeAppHostNETCore.Identity)">

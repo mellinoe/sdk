@@ -39,12 +39,18 @@ namespace Microsoft.NET.Build.Tasks
             var bytesToWrite = Encoding.UTF8.GetBytes(AppBinaryName);
             var destinationDirectory = Path.GetFullPath(AppHostDestinationDirectoryPath);
             ModifiedAppHostPath = Path.Combine(destinationDirectory, $"{appbaseName}{hostExtension}");
-
-            if ( File.Exists(ModifiedAppHostPath))
+            var originalHostNameMarkerFile = Path.Combine(destinationDirectory, "hostOriginalName.txt");
+            if (File.Exists(originalHostNameMarkerFile) && File.ReadAllText(originalHostNameMarkerFile) == AppHostSourcePath)
             {
-                //We have already done the required modification to apphost.exe
+                //We have already done the required modification to the host executable.
                 return;
             }
+
+            if (!Directory.Exists(destinationDirectory))
+            {
+                Directory.CreateDirectory(destinationDirectory);
+            }
+            File.WriteAllText(originalHostNameMarkerFile, AppHostSourcePath);
 
             if (bytesToWrite.Length > 1024)
             {
@@ -55,10 +61,6 @@ namespace Microsoft.NET.Build.Tasks
 
             SearchAndReplace(array, bytesToSearch, bytesToWrite, AppHostSourcePath);
 
-            if (!Directory.Exists(destinationDirectory))
-            {
-                Directory.CreateDirectory(destinationDirectory);
-            }
             File.WriteAllBytes(ModifiedAppHostPath, array);
         }
 
